@@ -1,12 +1,34 @@
 import React, { useState } from "react";
 import "./App.css";
 
-const InputCheckBox = () => {
-  const [checkedValues, setCheckedValues] = useState({
-    マウス: false,
-    モニター: false,
-    キーボード: false,
+const values = [
+  { id: 1, item: "マウス" },
+  { id: 2, item: "モニター" },
+  { id: 3, item: "キーボード" },
+];
+
+const CheckBtnItems = ({ onChange, checked }) =>
+  values.map((value) => {
+    return (
+      <label key={value.id}>
+        <input
+          type="checkbox"
+          value={value.item}
+          onChange={onChange}
+          checked={checked[value.item]}
+        />
+        {value.item}
+      </label>
+    );
   });
+
+const InputCheckBox = () => {
+  const [checkedValues, setCheckedValues] = useState(
+    values.reduce((acc, cur) => {
+      acc[cur.item] = false;
+      return acc;
+    }, {})
+  );
 
   const handleChange = (e) => {
     setCheckedValues({ ...checkedValues, [e.target.value]: e.target.checked });
@@ -28,34 +50,7 @@ const InputCheckBox = () => {
       <p>
         現在選択されている値：<b>{stateOfCheckedValues.join("、 ")}</b>
       </p>
-
-      <label>
-        <input
-          type="checkbox"
-          value="マウス"
-          onChange={handleChange}
-          checked={checkedValues["マウス"]}
-        />
-        マウス
-      </label>
-      <label>
-        <input
-          type="checkbox"
-          value="モニター"
-          onChange={handleChange}
-          checked={checkedValues["モニター"]}
-        />
-        モニター
-      </label>
-      <label>
-        <input
-          type="checkbox"
-          value="キーボード"
-          onChange={handleChange}
-          checked={checkedValues["キーボード"]}
-        />
-        キーボード
-      </label>
+      <CheckBtnItems onChange={handleChange} checked={checkedValues} />
     </div>
   );
 };
